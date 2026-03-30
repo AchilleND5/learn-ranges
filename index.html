@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Poker Range Trainer</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#1a1a2e">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>♠</text></svg>">
+</head>
+<body>
+  <div id="app">
+    <!-- Home screen -->
+    <div id="home" class="screen">
+      <h1>♠ Range Trainer</h1>
+      <p class="subtitle">Apprends tes ranges par coeur</p>
+      <button id="btn-random" class="btn btn-primary">Quiz aléatoire</button>
+      <div id="stats-summary" class="stats-box"></div>
+      <p class="hint">Les quiz arrivent aussi par notification via ntfy.</p>
+    </div>
+
+    <!-- Quiz screen -->
+    <div id="quiz" class="screen hidden">
+      <h2 id="range-name"></h2>
+      <p class="instruction">Récite ta range, puis vérifie.</p>
+
+      <button id="btn-reveal" class="btn btn-primary">Révéler la range</button>
+
+      <div id="range-image-container" class="hidden">
+        <img id="range-image" alt="Range" />
+      </div>
+
+      <div id="feedback-buttons" class="hidden">
+        <button id="btn-knew" class="btn btn-success">Je savais ✓</button>
+        <button id="btn-didnt" class="btn btn-danger">Je ne savais pas ✗</button>
+      </div>
+
+      <div id="result-msg" class="hidden"></div>
+
+      <button id="btn-back" class="btn btn-secondary">Retour</button>
+    </div>
+  </div>
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js');
+    }
+  </script>
+  <script src="app.js"></script>
+</body>
+</html>

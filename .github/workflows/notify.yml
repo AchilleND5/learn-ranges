@@ -1,0 +1,44 @@
+name: Poker Range Notification
+
+on:
+  schedule:
+    # Toutes les heures de 7h à 20h UTC = 9h à 22h heure de Paris (été)
+    # En hiver (UTC+1), ça décale d'1h : 8h-21h. Ajuster si besoin.
+    - cron: '0 7-20 * * *'
+  workflow_dispatch: # Permet de déclencher manuellement pour tester
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Maybe send a range quiz notification
+        env:
+          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+          SITE_URL: ${{ vars.SITE_URL }}
+        run: |
+          # ~40% chance d'envoyer = ~5-6 notifs/jour sur 14 slots
+          ROLL=$((RANDOM % 100))
+          echo "Roll: $ROLL (envoie si < 40)"
+          if [ "$ROLL" -ge 40 ]; then
+            echo "Pas de notif cette heure-ci."
+            exit 0
+          fi
+
+          # Charger les ranges depuis le dossier
+          RANGE=$(ls ranges/*.png | shuf -n 1 | sed 's|ranges/||;s|\.png$||')
+          echo "Range sélectionnée: $RANGE"
+
+          # Encoder le nom pour l'URL
+          ENCODED=$(python3 -c "import urllib.parse, sys; print(urllib.parse.quote(sys.argv[1]))" "$RANGE")
+
+          # Envoyer la notification via ntfy
+          curl -s \
+            -H "Title: Quiz Range" \
+            -H "Click: ${SITE_URL}?range=${ENCODED}" \
+            -H "Tags: spade_suit" \
+            -d "Range: ${RANGE}" \
+            "https://ntfy.sh/${NTFY_TOPIC}"
+
+          echo "Notification envoyée !"
