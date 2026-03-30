@@ -5,7 +5,8 @@ on:
     # Toutes les heures de 7h à 20h UTC = 9h à 22h heure de Paris (été)
     # En hiver (UTC+1), ça décale d'1h : 8h-21h. Ajuster si besoin.
     - cron: '0 7-20 * * *'
-  workflow_dispatch: # Permet de déclencher manuellement pour tester
+  workflow_dispatch:
+    # Permet de déclencher manuellement pour tester
 
 jobs:
   notify:
